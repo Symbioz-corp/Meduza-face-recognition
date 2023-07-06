@@ -3,14 +3,13 @@ import os
 from pathlib import Path
 import json
 import face_recognition
-import uuid
-import numpy as np
+from typing import List
 
 app = FastAPI()
 
 # Endpoint pour ajouter une personne
 @app.post("/add")
-async def add_person(images: list[UploadFile] = File(...), data: UploadFile = File(...)):
+async def add_person(images: List[UploadFile] = File(...), data: UploadFile = File(...)):
     # Créer un dossier unique pour chaque personne
     person_folder = str(uuid.uuid4())
     person_path = Path("persons") / person_folder
