@@ -5,7 +5,7 @@ from pathlib import Path
 import json
 import face_recognition
 import uuid
-
+import np from numpy
 app = FastAPI()
 
 # Endpoint pour ajouter une personne
