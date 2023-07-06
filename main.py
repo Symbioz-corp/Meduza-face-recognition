@@ -47,6 +47,8 @@ async def search_person(image: UploadFile = File(...)):
     return {"message": "No match found"}
 
 
+import numpy as np
+
 @app.post("/search")
 async def search_person(image: UploadFile = File(...)):
     # Charger l'image et détecter les visages
@@ -73,7 +75,7 @@ async def search_person(image: UploadFile = File(...)):
         for face_encoding_path in person_folder.glob("*.npy"):
             face_encodings.append(np.load(str(face_encoding_path)))
 
-        face_distances = face_recognition.face_distance(face_encodings, image_encodings)
+        face_distances = face_recognition.face_distance(face_encodings, image_encodings[0])
         best_match_index = np.argmin(face_distances)
 
         if face_distances[best_match_index] < best_match_distance:
@@ -89,6 +91,7 @@ async def search_person(image: UploadFile = File(...)):
         return {"person": best_match_data}
 
     return {"message": "No match found"}
+
 
 # Endpoint pour ajouter une personne
 @app.post("/add")
