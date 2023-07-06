@@ -3,6 +3,8 @@ import os
 from pathlib import Path
 import json
 import face_recognition
+import uuid
+import numpy as np
 
 app = FastAPI()
 
