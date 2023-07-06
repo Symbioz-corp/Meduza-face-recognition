@@ -1,9 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
+from typing import List
 import os
 from pathlib import Path
 import json
 import face_recognition
-from typing import List
 
 app = FastAPI()
 
