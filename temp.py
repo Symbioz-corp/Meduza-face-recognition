@@ -42,7 +42,9 @@ async def add_person(images: List[UploadFile] = File(...), data: UploadFile = Fi
 
     return {"message": "Person added successfully"}
 
-
+@app.post("/search")
+    print('Working')
+    return {"message": "Working"}
 # Endpoint pour rechercher une correspondance de visage
 @app.post("/search")
 async def search_person(image: UploadFile = File(...)):
