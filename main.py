@@ -44,7 +44,7 @@ async def add_person(images: List[UploadFile] = File(...), data: UploadFile = Fi
 
 
 # Endpoint pour ping
-@app.post("/search")
+@app.get("/")
 async def ping():
     print('Working')
     return {"message": "Working"}
