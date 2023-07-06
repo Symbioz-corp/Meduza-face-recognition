@@ -6,6 +6,9 @@ import json
 import face_recognition
 import uuid
 import numpy as np
+from PIL import Image
+import io
+
 app = FastAPI()
 
 # Endpoint pour ajouter une personne
@@ -48,7 +51,8 @@ async def add_person(images: List[UploadFile] = File(...), data: UploadFile = Fi
 async def search_person(image: UploadFile = File(...)):
     # Charger l'image et détecter les visages
     image_data = image.file.read()
-    image = face_recognition.load_image_file(image_data)
+    image = Image.open(io.BytesIO(image_data))
+    image = np.array(image)  # Convertir l'image en tableau NumPy
     face_locations = face_recognition.face_locations(image)
 
     if len(face_locations) == 0:
