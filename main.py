@@ -60,6 +60,9 @@ async def search_person(image: UploadFile = File(...)):
     # Trouver le visage le plus grand
     largest_face_location = max(face_locations, key=lambda loc: (loc[2] - loc[0]) * (loc[3] - loc[1]))
 
+    # Calculer les encodages de visage de l'image de recherche
+    image_encodings = face_recognition.face_encodings(image, [largest_face_location])
+
     # Rechercher une correspondance de visage parmi les fichiers existants
     persons_path = Path("persons")
     best_match_distance = float('inf')
@@ -80,13 +83,12 @@ async def search_person(image: UploadFile = File(...)):
             with open(data_path) as f:
                 best_match_data = json.load(f)
                 
-    print("best_match_distance "+ best_match_distance)
+    print("best_match_distance: ", best_match_distance)
+    
     if best_match_data is not None and best_match_distance < 0.6:
-        
         return {"person": best_match_data}
 
     return {"message": "No match found"}
-
 
 # Endpoint pour ajouter une personne
 @app.post("/add")
