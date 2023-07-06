@@ -48,12 +48,11 @@ async def search_person(image: UploadFile = File(...)):
             with open(data_path) as f:
                 best_match_data = json.load(f)
                 
-    print("best_match_distance: ", best_match_distance)
     
     if best_match_data is not None and best_match_distance < 0.6:
-        return {"person": best_match_data}
+        return {"person": best_match_data, "best_match_distance": best_match_distance}
 
-    return {"message": "No match found"}
+    return {"message": "No match found", "best_match_distance": best_match_distance}
 
 # Endpoint pour ajouter une personne
 @app.post("/add")
