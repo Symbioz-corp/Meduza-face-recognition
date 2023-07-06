@@ -14,8 +14,9 @@ app = FastAPI()
 @app.post("/search")
 async def search_person(image: UploadFile = File(...)):
     # Charger l'image et détecter les visages
-    image_data = image.file.read()
-    image = face_recognition.load_image_file(image_data)
+    image_data = await image.read()
+    image = Image.open(io.BytesIO(image_data))
+    image = np.array(image)
     face_locations = face_recognition.face_locations(image)
 
     if len(face_locations) == 0:
