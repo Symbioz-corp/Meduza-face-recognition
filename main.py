@@ -42,3 +42,42 @@ async def add_person(images: List[UploadFile] = File(...), data: UploadFile = Fi
         np.save(str(face_encoding_path), face_encoding)
 
     return {"message": "Person added successfully"}
+
+
+@app.post("/search")
+async def search_person(image: UploadFile = File(...)):
+    # Charger l'image et détecter les visages
+    image_data = image.file.read()
+    image = face_recognition.load_image_file(image_data)
+    face_locations = face_recognition.face_locations(image)
+
+    if len(face_locations) == 0:
+        return {"message": "No face detected"}
+
+    # Trouver le visage le plus grand
+    largest_face_location = max(face_locations, key=lambda loc: (loc[2] - loc[0]) * (loc[3] - loc[1]))
+
+    # Rechercher une correspondance de visage parmi les fichiers existants
+    persons_path = Path("persons")
+    for person_folder in persons_path.iterdir():
+        face_encodings = []
+        for face_encoding_path in person_folder.glob("*.npy"):
+            face_encodings.append(np.load(str(face_encoding_path)))
+
+        face_distances = face_recognition.face_distance(face_encodings, image_encodings)
+        best_match_index = np.argmin(face_distances)
+
+        if face_distances[best_match_index] < 0.6:
+            # Correspondance trouvée, renvoyer le fichier de données JSON de la personne
+            data_path = person_folder / "data.json"
+            with open(data_path) as f:
+                data = json.load(f)
+            return {"person": data}
+
+    return {"message": "No match found"}
+
+
+@app.get("/")
+async def ping():
+    print('Soeone pinged')
+    return {"message": "Server working"}
