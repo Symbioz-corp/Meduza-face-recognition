@@ -79,9 +79,10 @@ async def search_person(image: UploadFile = File(...)):
             data_path = person_folder / "data.json"
             with open(data_path) as f:
                 best_match_data = json.load(f)
-
+                
+    print("best_match_distance "+ best_match_distance)
     if best_match_data is not None and best_match_distance < 0.6:
-        print("best_match_distance "+ best_match_distance)
+        
         return {"person": best_match_data}
 
     return {"message": "No match found"}
